@@ -1,6 +1,8 @@
 ## Vue3 Quiz Game using API 
+<hr>
 
-#### To install Vue CLI with Homebrew
+#### To install Vue CLI with Homebrew  
+
 ```brew install vue-cli```
 ### Project setup
 ```
@@ -271,22 +273,142 @@ export default {
 *We are working with this dot .vue files.*
 *And here TO BE ABLE TO ACCESS its data properties, we need to use that 'this' key word.*  
 So inside the App.vue in the 'template' we code the question like this:  
-## ERROR TO SOLVE : 
+## ERROR TO SOLVE : -> SOLVED = I HAVE REMOVED THE CONTENT FROM BETWEEN THE ```<h1>``` and ```</h1>``` so it's empty now and that's it == WORKS !
 ```
-<!-- <h1> -->
+<h1> --> Works but creates problem with 
 <!-- CREATES THE ERROR -->
 <h1>{{ this.question }}</h1> -> WORKS BUT NOT WHAT I EXACTLY NEED !!!
-<h1 v-html="">{{ this.question }}</h1> -> DOES NOT WORK BUT IS WHAT I EXACTLY NEED = SHOWS ERRORS AND BRAKES SITE !!!  
-<h1 v-html="">{{ el.outerHTML }}</h1>  -> DOES NOT WORK
+<h1 v-html="this.question">{{ this.question }}</h1> -> DOES NOT WORK BUT IS WHAT I EXACTLY NEED = SHOWS ERRORS AND BRAKES SITE !!!  
+<h1 v-html="this.question">{{ el.outerHTML }}</h1>  -> DOES NOT WORK
 
 <h1 v-html="('this.question;')"> -> DOES NOT WORK -> FROM GitHub vuejs/core repo (https://github.com/vuejs/core/issues/5439)
 <h1 v-html="'this.question';"> -> DOES NOT WORK
 <h1 v-html="('this.question')"> -> DOES NOT WORK
-
-
 ```
-#### *But because we want to display as a text any html entity ()*
+### Now the CORRECT HTML looks like this: 
+##### Nothing in between ```<h1>``` AND ```</h1>```
+```
+<h1 
+  v-html="this.question" 
+  v-bind:key="question"
+></h1>
+```
+#### *But because we want to display as a text any html entity*
 
 When the DATA is coming with API we have sometimes some HTML with the sentences, and HTML will not pass the html but the code as it is.  
 So to display on page something that has an html element we have to use Vue HTML DIRECTIVE  
  We are telling to Vue that what we are passing here is HTML. 
+
+This line has changed and works:  
+```this.incorrectAnswers = response.data.results[0].incorrect_answers;```  
+
+####  Commit 02: Added answers.splice(Math.round + Math.random + answers.length) in App.vue file
+ 
+```
+computed: {
+  answers() {
+    // var answers = this.incorrectAnswers;
+    var answers = JSON.parse( JSON.stringify(this.incorrectAnswers) );
+    // answers.push(this.correctAnswer);
+    // answers.splice(0, 0, this.correctAnswer);
+    answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswer);
+    // answers.push("test");
+    return answers;
+  }
+},
+```  
+Difference between Computed Properties and Methods:  
+- Search in Vue.js documentation:  
+https://vuejs.org/guide/essentials/computed.html  
+
+## GitHub: Deleting the last commit: This command WORKED:  
+*Be careful ! ```reset --hard``` will remove your local (uncommitted) modifications, too.*  
+
+#### 1st STEP:
+```git reset --hard HEAD~2```  in this case did satisfied the task to delete the latest commit and go back to the previous one !!!  
+ 
+#### 2nd STEP:  
+```git push --force origin main``` →  WORKED: Deleted the commit from the list of commits on GitHub repository !  
+- Now I see the typo 'Commmit 01' instead of "Commit 01", but now never mind !  
+
+### Now everything works correctly at: Video 30. Submitting the answer  
+**The HTML part**
+```
+<template>
+
+  <div>
+  <p>Player "0" x "0" Computer</p>
+  <hr>
+ 
+  <template v-if="this.question">
+  
+  <h1 
+    v-html="this.question" 
+    v-bind:key="question"
+  > </h1>
+
+    <template v-for="(answer, index) in this.answers" v-bind:key="index">
+      <input 
+        type="radio" 
+        name="options" 
+        :value="answer"
+        v-model="chosen_answer"
+      >
+      <label v-html="answer"></label><br>
+    </template>
+    <button @click="this.submitAnswer" class="send" type="button">Send</button>
+  </template>
+    </div>
+</template>
+```
+**The script part:**
+```
+<script>
+
+export default {
+  name: 'App',
+
+  data() {
+    return {
+      question: undefined,
+      incorrectAnswers: undefined,
+      correctAnswer: undefined,
+      chosen_answer: undefined
+    }
+  },
+  computed: {
+    answers() {
+      var answers = this.incorrectAnswers;
+      answers.push(this.correctAnswer);
+      return answers;
+    }
+  },
+
+  methods: {
+    submitAnswer() {
+      if (!this.chosen_answer) {
+        alert("Pick one of the options");
+      } else {
+        if (this.chosen_answer == this.correctAnswer){
+          alert("You got it right!");
+        } else {
+          alert("You got it wrong!") 
+        }
+      }
+    }
+  },
+
+  created() {
+    this.axios
+    .get('https://opentdb.com/api.php?amount=1&category=18')
+    .then((response) => {
+      this.question = response.data.results[0].question;
+      this.incorrectAnswers = response.data.results[0].incorrect_answers;
+      this.correctAnswer = response.data.results[0].correct_answer;
+    })
+  }
+}
+
+</script>
+```
+

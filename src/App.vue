@@ -1,24 +1,28 @@
 <template>
 
-<p>Player "0" x "0" Computer</p>
-<div>
+  <div>
+  <p>Player "0" x "0" Computer</p>
+  <hr>
+ 
+  <template v-if="this.question">
+  
+  <h1 
+    v-html="this.question" 
+    v-bind:key="question"
+  > </h1>
 
-<hr>
-<!-- v-html error: "VueCompilerError: v-html will override element children."
-at /Users/username/Dev_Vue/Vue3Quiz/project4-quiz-game-initial/src/App.vue:9:3 -->
-<h1>
-  {{this.question}}
-</h1>
-
-<input type="radio" name="options" value="True">
-<label>True</label><br>
-
-<input type="radio" name="options" value="True">
-<label>False</label><br>
-
-<button>Send</button>
-</div>
-
+    <template v-for="(answer, index) in this.answers" v-bind:key="index">
+      <input 
+        type="radio" 
+        name="options" 
+        :value="answer"
+        v-model="chosen_answer"
+      >
+      <label v-html="answer"></label><br>
+    </template>
+    <button @click="this.submitAnswer" class="send" type="button">Send</button>
+  </template>
+    </div>
 </template>
 
 <script>
@@ -30,7 +34,8 @@ export default {
     return {
       question: undefined,
       incorrectAnswers: undefined,
-      correctAnswer: undefined
+      correctAnswer: undefined,
+      chosen_answer: undefined
     }
   },
   computed: {
@@ -38,6 +43,20 @@ export default {
       var answers = this.incorrectAnswers;
       answers.push(this.correctAnswer);
       return answers;
+    }
+  },
+
+  methods: {
+    submitAnswer() {
+      if (!this.chosen_answer) {
+        alert("Pick one of the options");
+      } else {
+        if (this.chosen_answer == this.correctAnswer){
+          alert("You got it right!");
+        } else {
+          alert("You got it wrong!") 
+        }
+      }
     }
   },
 
@@ -51,9 +70,7 @@ export default {
     })
   }
 }
-
 // https://opentdb.com/api.php?amount=1&category=18
-
 </script>
 
 <style lang="scss">
