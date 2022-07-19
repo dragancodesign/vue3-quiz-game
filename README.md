@@ -431,7 +431,7 @@ Inside the methods:
   },
   ```
 ## App.vue file now at the point before making the Next Question Dynamic:  
-### 1. The HTML part inside the template tag looks like this: 
+**1. The HTML part inside the template tag looks like this:**  
 ```html
 <template>
 
@@ -475,7 +475,7 @@ Inside the methods:
     </div>
 </template>
 ```
-### 2. The complete script tag until now looks like this: 
+**2. The complete script tag until now looks like this:**  
 ```js 
 <script>
 
@@ -527,7 +527,7 @@ export default {
 // https://opentdb.com/api.php?amount=1&category=18
 </script>
 ```
-### 3. The style tag remains the same:  
+**3. The style tag remains the same:**  
 ```css
 <style lang="scss">
 #app {
@@ -556,10 +556,10 @@ export default {
 }
 </style>
 ```
-## Created and imported component ScoreBoard
+## Created and imported component ScoreBoard.vue
 Video No. 33 → DONE ! ! !  
 
-COMPONENT CONTENT: 
+COMPONENT CONTENT:  
 ```html
 <template>
 
@@ -591,3 +591,55 @@ Player <span>0</span> x <span>0</span> Computer.
 </style>
 ```
 
+### Final settings: 
+
+**props** - They are two ways to use props.  
+https://vuejs.org/guide/components/props.html#prop-passing-details  
+1. We can pass an array of strings 
+```html
+<!-- Even though the array is static, we need v-bind to tell Vue that -->
+<!-- this is a JavaScript expression rather than a string.            -->
+<BlogPost :comment-ids="[234, 266, 273]" />
+
+<!-- Dynamically assign to the value of a variable. -->
+<BlogPost :comment-ids="post.commentIds" />
+```
+2. We can use an object and assign a type of this prop. This can be useful if you want to receive warnings if the type is not correct ! Example: we have loseCount property and we set it as a number and then we receive a string instead. We can have that kind of warning.  
+```html
+<!-- Even though the object is static, we need v-bind to tell Vue that -->
+<!-- this is a JavaScript expression rather than a string.             -->
+<BlogPost
+  :author="{
+    name: 'Veronica',
+    company: 'Veridian Dynamics'
+  }"
+ />
+
+<!-- Dynamically assign to the value of a variable. -->
+<BlogPost :author="post.author" />
+```
+### Here in my project:  
+Data here is passed, but if we want this to be dynamic we have to pass at the beginning of each element inside the line in App.vue :  
+```html
+<!-- In App.vue -->
+
+    <ScoreBoard :winCount="this.winCount" :loseCount="this.loseCount" />
+
+And in the ScoreBoard.vue: for data to appear
+
+<!-- In ScoreBoard.vue -->
+<template>
+     
+    <section class="score">
+    Player <span>{{this.winCount}}</span> x <span>{{this.loseCount}}</span> Computer.
+    </section>
+     
+    </template>
+```
+## The final words:  
+**The project is practically done.**  
+*The things that can be improved are:*  
+- The score is kept as long as we are pressing 'Next question button'. If we refresh the page then the results are lost.  
+- To improve this we can store data in the LOCAL STORAGE to keep it.  
+- For the beginning of using Vue.js I am really satisfied !  
+- Now on my way to next project 🎯 😊 🙏  

@@ -2,7 +2,7 @@
 
   <div>
 
-  <ScoreBoard />
+  <ScoreBoard :winCount="this.winCount" :loseCount="this.loseCount" />
 
   <hr>
  
@@ -61,7 +61,9 @@ export default {
             incorrectAnswers: undefined,
             correctAnswer: undefined,
             chosenAnswer: undefined,
-            answerSubmitted: false
+            answerSubmitted: false,
+            winCount: 0,
+            loseCount: 0
         };
     },
     computed: {
@@ -79,10 +81,12 @@ export default {
             else {
                 this.answerSubmitted = true;
                 if (this.chosenAnswer == this.correctAnswer) {
-                    console.log("You got it right!");
+                    // console.log("You got it right!");
+                    this.winCount++;
                 }
                 else {
-                    console.log("You got it wrong!");
+                  // console.log("You got it wrong!");
+                  this.loseCount++;
                 }
             }
         },
