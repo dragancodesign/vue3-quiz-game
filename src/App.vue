@@ -1,7 +1,9 @@
 <template>
 
   <div>
-  <p>Player "0" x "0" Computer</p>
+
+  <ScoreBoard />
+
   <hr>
  
   <template v-if="this.question">
@@ -43,61 +45,64 @@
 </template>
 
 <script>
+import ScoreBoard from '@/components/ScoreBoard.vue'
 
 export default {
-  name: 'App',
+    name: "App",
 
-  data() {
-    return {
-      question: undefined,
-      incorrectAnswers: undefined,
-      correctAnswer: undefined,
-      chosenAnswer: undefined,
-      answerSubmitted: false
-    }
-  },
-  computed: {
-    answers() {
-      var answers = JSON.parse(JSON.stringify(this.incorrectAnswers));
-      answers.splice(Math.round(Math.random() * answers.length), 0,  this.correctAnswer);
-      return answers;
-    }
-  },
-
-  methods: {
-    submitAnswer() {
-      if (!this.chosenAnswer) {
-        alert("Pick one of the options");
-      } else {
-        this.answerSubmitted = true
-        if (this.chosenAnswer == this.correctAnswer){
-          console.log("You got it right!");
-        } else {
-          console.log("You got it wrong!") 
-        }
-      }
+    components: {
+      ScoreBoard
     },
 
-    getNewQuestion() {
-      this.answerSubmitted = false;
-      this.chosenAnswer = undefined;
-      this.question = undefined;
 
-      this.axios
-      .get('https://opentdb.com/api.php?amount=1&category=18')
-      .then((response) => {
-        this.question = response.data.results[0].question;
-        this.incorrectAnswers = response.data.results[0].incorrect_answers;
-        this.correctAnswer = response.data.results[0].correct_answer;
-      })
-    }
+    data() {
+        return {
+            question: undefined,
+            incorrectAnswers: undefined,
+            correctAnswer: undefined,
+            chosenAnswer: undefined,
+            answerSubmitted: false
+        };
+    },
+    computed: {
+        answers() {
+            var answers = JSON.parse(JSON.stringify(this.incorrectAnswers));
+            answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswer);
+            return answers;
+        }
+    },
+    methods: {
+        submitAnswer() {
+            if (!this.chosenAnswer) {
+                alert("Pick one of the options");
+            }
+            else {
+                this.answerSubmitted = true;
+                if (this.chosenAnswer == this.correctAnswer) {
+                    console.log("You got it right!");
+                }
+                else {
+                    console.log("You got it wrong!");
+                }
+            }
+        },
+        getNewQuestion() {
+            this.answerSubmitted = false;
+            this.chosenAnswer = undefined;
+            this.question = undefined;
+            this.axios
+                .get("https://opentdb.com/api.php?amount=1&category=18")
+                .then((response) => {
+                this.question = response.data.results[0].question;
+                this.incorrectAnswers = response.data.results[0].incorrect_answers;
+                this.correctAnswer = response.data.results[0].correct_answer;
+            });
+        }
+    },
+    created() {
+        this.getNewQuestion();
+    },
 
-  },
-
-  created() {
-    this.getNewQuestion();
-
-  }
 }
 // https://opentdb.com/api.php?amount=1&category=18
 </script>

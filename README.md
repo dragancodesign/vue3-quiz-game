@@ -556,4 +556,38 @@ export default {
 }
 </style>
 ```
+## Created and imported component ScoreBoard
+Video No. 33 → DONE ! ! !  
+
+COMPONENT CONTENT: 
+```html
+<template>
+
+<section class="score">
+Player <span>0</span> x <span>0</span> Computer.
+</section>
+
+</template>
+
+<script>
+   export default {
+
+   }
+
+</script>
+
+<style lang="css">
+    section.score {
+        border-bottom: 1px solid black;
+        padding: 24px;
+        font-size: 18px;
+}
+    span {
+        padding: 8px;
+        font-weight: bold;
+        border: 1px solid blue;
+    }
+
+</style>
+```
 
